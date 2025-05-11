@@ -247,17 +247,6 @@ trainBtn = customTk.CTkButton(
 trainBtn.place(relx=(0.5 - center_btn(setImageBtn)), y=bt_y + 60)
 
 
-# identify button function
-# def identifyingButton():
-#     if (img_path != "") and (train_done == True):
-#         # print(neural(img_path))
-#         catVSdog(neural(img_path))
-#     else:
-#         writeText(res_label, "set image and train first", 30, "red")
-
-
-
-
 def identifyingButton():
     if img_path == "" or img_path is None:
         writeText(res_label, "Please upload an image first", 30, "red")
@@ -357,10 +346,19 @@ def sto_draw(root, cost):
     toolbar.pack(fill="x")
 
 
-# close function
 def on_close():
     print("Application is closing...")
-    app.destroy()  # Gracefully destroy the window
+    # Cancel all pending Tkinter callbacks
+    try:
+        app.after_cancel(app.after_id)  # Cancel any pending callbacks if stored
+    except AttributeError:
+        pass  # Ignore if no callbacks are pending
+
+    # Close all matplotlib figures
+    plt.close('all')
+    # Destroy the application window
+    app.quit()  # Stop the Tkinter main loop
+    app.destroy()  # Destroy the window
 
 # Bind the close event
 app.protocol("WM_DELETE_WINDOW", on_close)
